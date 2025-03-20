@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multi-options web component example</title>
+<link rel="stylesheet" href="./css/example.css">
+
+<form action="#" method="GET">
+	<div class="form_row">
+		<label for="options_new">Fruit:</label>
+		<div class="form_field">
+			<multi-options>
+
+				<!-- If you have an array of known `options` include them in this `datalist`: -->
+				<datalist id="list_fruit">
+					<option value="Apples">
+					<option value="Bananas">
+					<option value="Pears">
+					<option value="Strawberries">
+				</datalist>
+
+				<!-- If you'd like to define how the list of options will be constructed, use these `<template>`s, for both the list or wrapper… -->
+				<template data-type="wrapper">
+					<ul slot="wrapper"></ul>
+				</template>
+				<!-- …and for each item -->
+				<template data-type="item">
+					<li>
+						<label>
+							<input type="checkbox" name="options" value="" id="" checked>
+							<span slot="item-label"></span>
+						</label>
+					</li>
+				</template>
+
+				<!-- If you want the user to be able to add new `options`, add this text field: -->
+				<div>
+					<input type="text" name="options" id="options_new" list="list_fruit">
+					<button type="button">Add</button>
+				</div>
+
+				<!-- If some of the known `options` have been added server-side before, list them as checkboxes: -->
+				<ul slot="wrapper">
+					<li>
+						<label>
+							<input type="checkbox" name="options" value="Apples" id="options_Apples" checked>
+							<span>Apples</span>
+						</label>
+					</li>
+					<li>
+						<label>
+							<input type="checkbox" name="options" value="Bananas" id="options_Bananas" checked>
+							<span>Bananas</span>
+						</label>
+					</li>
+				</ul>
+
+			</multi-options>
+		</div>
+	</div>
+</form>
+<script type="module" src="../src/index.mjs"></script>
+
+
