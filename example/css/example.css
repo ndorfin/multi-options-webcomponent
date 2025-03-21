@@ -49,7 +49,7 @@ html {
 }
 
 body {
-	margin: 2rem;
+	margin: 1rem;
 }
 
 .form_row {
@@ -64,22 +64,26 @@ body {
 
 [type="text"],
 button {
+	--control-font-size: 1rem;
+	--control-padding: 0.5rem;
+	--control-border-width: 0.0625rem;
+
 	appearance: none;
 	display: block;
-	padding: 0.5rem;
-	border: #ccc solid 1px;
-	border-radius: 0.25rem;
+	padding: var(--control-padding);
+	border: #ccc solid var(--control-border-width);
+	border-radius: calc(var(--control-font-size) / 4);
 	font-family: inherit;
-	font-size: 1rem;
+	font-size: var(--control-font-size);
 	line-height: 1;
 }
 
 [type="text"] {
-	box-sizing: content-box;
+	box-sizing: border-box;
 	inline-size: 100%;
-	max-block-size: 1rem;
+	max-block-size: calc(var(--control-font-size) + (var(--control-padding) * 2) + (var(--control-border-width) * 2));
 }
 
 button {
-	padding-inline: 1rem;
+	padding-inline: calc(var(--control-padding) * 2);
 }

@@ -1,8 +1,13 @@
+const SELECTOR_WRAPPER   = '[slot="wrapper"]',
+      SELECTOR_BUTTON    = '[type="button"]',
+      SELECTOR_CHECKBOX  = '[type="checkbox"]',
+      SELECTOR_TEXTFIELD = '[type="text"]';
+
 export default class MultiOptions extends HTMLElement {
 
 	#addNewItemElemToWrapper(item) {
 		let itemFragment = this.templateItem;
-		let checkbox = itemFragment.querySelector('[type="checkbox"]')
+		let checkbox = itemFragment.querySelector(SELECTOR_CHECKBOX)
 		checkbox.value = item;
 		checkbox.id = `${ checkbox.name }_${ checkbox.value }`;
 		let label = itemFragment.querySelector('[data-item-label]');
@@ -23,28 +28,6 @@ export default class MultiOptions extends HTMLElement {
 		this.#synchroniseList();
 	}
 
-	#handleClicks(event) {
-		if (event.target.matches('[type="button"]')) {
-			if (this.textElem.value) this.#addNewOptionsToList();
-		}
-	}
-
-	#handleKeyDown(event) {
-		if (event.key == 'Enter' && document.activeElement == this.textElem) {
-			event.preventDefault();
-			if (this.textElem.value) this.#addNewOptionsToList();
-		} 
-	}
-
-	#handleChanges(event) {
-		if (event.target.matches('[type="checkbox"]:not(:checked)')) {
-			let topMostParentBeforeWrapper = event.target.closest('[slot="wrapper"] > *');
-			this.wrapperElem.removeChild(topMostParentBeforeWrapper);
-			if (!this.wrapperElem.children.length) this.wrapperElem.textContent = '';
-			this.#synchroniseList();
-		}
-	}
-
 	#refreshList() {
 		const disabledItems = this.datalistElem.querySelectorAll('option:disabled');
 		disabledItems.forEach((item) => item.disabled = false);
@@ -52,20 +35,41 @@ export default class MultiOptions extends HTMLElement {
 
 	#synchroniseList() {
 		if (this.datalistElem) {
-			const checkboxes = this.wrapperElem.querySelectorAll('[type="checkbox"]');
+			this.#refreshList();
+			const checkboxes = this.wrapperElem.querySelectorAll(SELECTOR_CHECKBOX);
 			if (checkboxes.length) {
-				this.#refreshList();
 				checkboxes.forEach(({value}) => {
-					console.log('value', value);
-					this.datalistElem.querySelector(`option[value="${ value }"]`).disabled = true;
+					const matchingOption = this.datalistElem.querySelector(`option[value="${ value }"]`);
+					if (matchingOption) matchingOption.disabled = true;
 				});
 			}
 		}
 	}
 
+	/* Event Handlers */
+	#handleClicks(event) {
+		if (event.target.matches(SELECTOR_BUTTON)) {
+			if (this.textElem.value) this.#addNewOptionsToList();
+		}
+	}
+	#handleKeyDowns(event) {
+		if (event.key == 'Enter' && document.activeElement == this.textElem) {
+			event.preventDefault();
+			if (this.textElem.value) this.#addNewOptionsToList();
+		} 
+	}
+	#handleChanges(event) {
+		if (event.target.matches(`${ SELECTOR_CHECKBOX }:not(:checked)`)) {
+			let topMostParentBeforeWrapper = event.target.closest(`${ SELECTOR_WRAPPER } > *`);
+			this.wrapperElem.removeChild(topMostParentBeforeWrapper);
+			if (!this.wrapperElem.children.length) this.wrapperElem.textContent = '';
+			this.#synchroniseList();
+		}
+	}
+
 	connectedCallback() {
 		this.addEventListener('click', this.#handleClicks.bind(this));
-		this.addEventListener('keydown', this.#handleKeyDown.bind(this));
+		this.addEventListener('keydown', this.#handleKeyDowns.bind(this));
 		this.addEventListener('change', this.#handleChanges.bind(this));
 		this.#synchroniseList();
 	}
@@ -84,18 +88,18 @@ export default class MultiOptions extends HTMLElement {
 	
 	/* Shorthand element lookups */
 	get buttonElem() {
-		return this.querySelector('[type="button"]');
+		return this.querySelector(SELECTOR_BUTTON);
 	}
 	get textElem() {
-		return this.querySelector('[type="text"]');
+		return this.querySelector(SELECTOR_TEXTFIELD);
 	} 
 	get wrapperElem() {
-		const wrapper = this.querySelector('[slot="wrapper"]');
+		const wrapper = this.querySelector(SELECTOR_WRAPPER);
 		if (wrapper) return wrapper;
 
 		const newWrapper = this.templateWrapper;
 		this.append(newWrapper);
-		return this.querySelector('[slot="wrapper"]');
+		return this.querySelector(SELECTOR_WRAPPER);
 	}
 	get datalistElem() {
 		return this.querySelector('datalist');
