@@ -28,6 +28,28 @@ export default class MultiOptions extends HTMLElement {
 		this.#synchroniseList();
 	}
 
+	#getCustomErrorMessage() {
+		if (this.textElem.hasAttribute('data-error-text-quotes')) {
+			return this.textElem.getAttribute('data-error-text-quotes');
+		} else {
+			return 'Sorry, double-quotes (") aren’t allowed';
+		}
+	}
+
+	#checkTextEntry() {
+		if (!this.textElem.value) return;
+		if (this.textElem.value.includes('"')) {
+			this.textElem.setCustomValidity(this.#getCustomErrorMessage());
+			this.textElem.reportValidity();
+			return;
+		} else {
+			this.textElem.setCustomValidity('');
+		}
+		if (this.textElem.checkValidity()) {
+			this.#addNewOptionsToList();
+		}
+	}
+
 	#emptyWrapper() {
 		if (!this.wrapperElem.children.length) this.wrapperElem.textContent = '';
 	}
@@ -53,13 +75,13 @@ export default class MultiOptions extends HTMLElement {
 	/* Event Handlers */
 	#handleClicks(event) {
 		if (event.target.matches(SELECTOR_BUTTON)) {
-			if (this.textElem.value) this.#addNewOptionsToList();
+			this.#checkTextEntry();
 		}
 	}
 	#handleKeyDowns(event) {
 		if (event.key == 'Enter' && document.activeElement == this.textElem) {
 			event.preventDefault();
-			if (this.textElem.value) this.#addNewOptionsToList();
+			this.#checkTextEntry();
 		} 
 	}
 	#handleChanges(event) {
