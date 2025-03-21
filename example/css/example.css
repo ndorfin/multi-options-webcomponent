@@ -3,7 +3,8 @@
 multi-options {
 	display: block;
 	
-	& ul {
+	& [slot="wrapper"] {
+		display: block;
 		list-style: '';
 		padding: 0;
 		margin: 0;
@@ -19,9 +20,13 @@ multi-options {
 			color: color-mix(in srgb, currentColor 50%, white 50%);
 		}
 
-		& li + li {
-			border-block-start: #ccc solid 1px;
-		}
+		& > * {
+			display: block;
+
+			& + * {
+				border-block-start: #ccc solid 1px;
+			}
+		} 
 
 		& label {
 			display: block;

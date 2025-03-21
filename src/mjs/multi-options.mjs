@@ -28,6 +28,10 @@ export default class MultiOptions extends HTMLElement {
 		this.#synchroniseList();
 	}
 
+	#emptyWrapper() {
+		if (!this.wrapperElem.children.length) this.wrapperElem.textContent = '';
+	}
+
 	#refreshList() {
 		const disabledItems = this.datalistElem.querySelectorAll('option:disabled');
 		disabledItems.forEach((item) => item.disabled = false);
@@ -62,7 +66,7 @@ export default class MultiOptions extends HTMLElement {
 		if (event.target.matches(`${ SELECTOR_CHECKBOX }:not(:checked)`)) {
 			let topMostParentBeforeWrapper = event.target.closest(`${ SELECTOR_WRAPPER } > *`);
 			this.wrapperElem.removeChild(topMostParentBeforeWrapper);
-			if (!this.wrapperElem.children.length) this.wrapperElem.textContent = '';
+			this.#emptyWrapper();
 			this.#synchroniseList();
 		}
 	}
@@ -72,6 +76,7 @@ export default class MultiOptions extends HTMLElement {
 		this.addEventListener('keydown', this.#handleKeyDowns.bind(this));
 		this.addEventListener('change', this.#handleChanges.bind(this));
 		this.#synchroniseList();
+		this.#emptyWrapper();
 	}
 	
 	/* Shorthand template retrieval */

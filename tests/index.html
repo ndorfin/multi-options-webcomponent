@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Multi-options web component example</title>
+<link rel="stylesheet" href="../example/css/example.css">
+<style>
+	.form_row {
+		clear: both;
+		& + .form_row {
+			margin-block-start: 4rem;
+		}
+	}
+	.form_row > p,
+	.form_row > ul {
+		float: inline-end;
+		inline-size: 50%;
+		margin-block-start: 0;
+	}
+	.form_row > label,
+	.form_row > .form_field {
+		margin-inline-end: calc(50% + 4rem);
+	}
+
+	.form_row > label {
+		display: block;
+	}
+</style>
+<form action="#" method="GET">
+	<div class="form_row">
+		<p>
+			Test that other focused text fields can still submit the form when the <kbd>Enter</kbd> key is pressed.
+		</p>
+		<label for="txt_another">Another text field:</label>
+		<div class="form_field">
+			<input type="text" name="another" id="txt_another">
+		</div>
+	</div>
+	
+	<div class="form_row">
+		<p>
+			Test the case when the template items don't match the previously-selected items
+		</p>
+		<label for="fruit_options_new">Fruit:</label>
+		<div class="form_field">
+			<multi-options>
+
+				<!-- If you have an array of known `options` include them in this `datalist`: -->
+				<datalist id="list_fruit">
+					<option value="Apples">
+					<option value="Bananas">
+					<option value="Pears">
+					<option value="Strawberries">
+				</datalist>
+
+				<!-- If you'd like to define how the list of options will be constructed, use these `<template>`s, for both the list or wrapper… -->
+				<template data-type="wrapper">
+					<ul slot="wrapper" data-no-items="No fruit added"></ul>
+				</template>
+				<!-- …and for each item -->
+				<template data-type="item">
+					<li>
+						<label>
+							<input type="checkbox" name="fruit_options" value="" id="" checked>
+							<span data-item-label></span>
+						</label>
+					</li>
+				</template>
+
+				<!-- If you want the user to be able to add new `fruit_options`, add this text field: -->
+				<div>
+					<input type="text" name="fruit_options" id="fruit_options_new" list="list_fruit" pattern="([\w\s]+)(,\s*\w+)*">
+					<button type="button">Add</button>
+				</div>
+
+				<!-- If some of the known `options` have been added server-side before, list them as checkboxes: -->
+				<div slot="wrapper" data-no-items="No fruit added">
+					<label>
+						<input type="checkbox" name="fruit_options" value="Apples" id="fruit_options_Apples" checked>
+						<span>Apples</span>
+					</label>
+					<label>
+						<input type="checkbox" name="fruit_options" value="Bananas" id="fruit_options_Bananas" checked>
+						<span>Bananas</span>
+					</label>
+				</div>
+
+			</multi-options>
+		</div>
+	</div>
+
+	<div class="form_row">
+		<p>
+			Test the case where:
+		</p>
+		<ul>
+			<li>there is no wrapper for the list of previously-selected items present</li>
+			<li>the component adds a necessary wrapper for the first time</li>
+		</ul>
+		<label for="vegetable_options_new">Vegetables:</label>
+		<div class="form_field">
+			<multi-options>
+
+				<!-- If you have an array of known `vegetable_options` include them in this `datalist`: -->
+				<datalist id="list_vegetables">
+					<option value="Carrots">
+					<option value="Potatoes">
+					<option value="Pumpkins">
+				</datalist>
+
+				<!-- If you'd like to define how the list of options will be constructed, use these `<template>`s, for both the list or wrapper… -->
+				<template data-type="wrapper">
+					<ul slot="wrapper" data-no-items="No vegetables added"></ul>
+				</template>
+				<!-- …and for each item -->
+				<template data-type="item">
+					<li>
+						<label>
+							<input type="checkbox" name="vegetable_options" value="" id="" checked>
+							<span data-item-label></span>
+						</label>
+					</li>
+				</template>
+
+				<!-- If you want the user to be able to add new `vegetable_options`, add this text field: -->
+				<div>
+					<input type="text" name="vegetable_options" id="vegetable_options_new" list="list_vegetables" pattern="([\w\s]+)(,\s*\w+)*">
+					<button type="button">Add</button>
+				</div>
+
+				<!-- If some of the known `options` have been added server-side before, list them as checkboxes: -->
+				<!-- This test case deliberately doesn't have an existing list -->
+				<!-- <ul slot="wrapper" data-no-items="No vegetable added">
+					<li>
+						<label>
+							<input type="checkbox" name="vegetable_options" value="Apples" id="vegetable_options_Apples" checked>
+							<span>Parsnips</span>
+						</label>
+					</li>
+				</ul> -->
+			</multi-options>
+		</div>
+	</div>
+
+	<div class="form_row">
+		<p>
+			Test the case where:
+		</p>
+		<ul>
+			<li>there are no known items on the server-side. The <code>datalist</code> element doesn't exist.</code></li>
+			<li>there are no previously-selected items to show</li>
+			<li>any whitespace in the wrapper is removed to trigger the <code>:empty</code> in the CSS</code></li>
+		</ul>
+		</p>
+		<label for="drink_options_new">Drinks:</label>
+		<div class="form_field">
+			<multi-options>
+
+				<!-- If you have an array of known `drink_options` include them in this `datalist`: -->
+				<!-- This test case deliberately doesn't have a list of known drinks -->
+				<!-- <datalist id="list_drinks">
+					<option value="Cider">
+					<option value="Beer">
+					<option value="Whiskey">
+				</datalist> -->
+
+				<!-- If you'd like to define how the list of options will be constructed, use these `<template>`s, for both the list or wrapper… -->
+				<template data-type="wrapper">
+					<ul slot="wrapper" data-no-items="No drinks added"></ul>
+				</template>
+				<!-- …and for each item -->
+				<template data-type="item">
+					<li>
+						<label>
+							<input type="checkbox" name="drink_options" value="" id="" checked>
+							<span data-item-label></span>
+						</label>
+					</li>
+				</template>
+
+				<!-- If you want the user to be able to add new `drink_options`, add this text field: -->
+				<div>
+					<input type="text" name="drink_options" id="drink_options_new" list="list_drinks" pattern="([\w\s]+)(,\s*\w+)*">
+					<button type="button">Add</button>
+				</div>
+
+				<!-- If some of the known `drink_options` have been added server-side before, list them as checkboxes: -->
+				<ul slot="wrapper" data-no-items="No drinks added">
+					
+				</ul>
+
+			</multi-options>
+		</div>
+	</div>
+	<div class="form_row">
+		<button type="submit">Submit</button>
+	</div>
+</form>
+<p>
+	More cases to test in future:
+</p>
+<ul>
+	<li>If a value is added to the text box, and the form is submitted without adding the new item to the list</li>
+	<li>That the items in the list are ordered alphabetically</li>
+	<li>That exotic characters and punctuation (other than comma) still work as valid items</li>
+</ul>
+<script type="module" src="../src/index.mjs"></script>
+
+
